@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find launch_package)/launch/create_rgbd_map.launch" >
+         <param name="localization" value="true"/>
+    </include>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find launch_package)/params/mapping_rgbd_rviz.rviz" />
+</launch>

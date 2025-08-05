@@ -1,0 +1,8 @@
+prefix=/home/caio/kioneer_ws/devel
+
+Name: p2os_urdf
+Description: Description of p2os_urdf
+Version: 2.2.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: tf urdf geometry_msgs sensor_msgs std_msgs kdl_parser

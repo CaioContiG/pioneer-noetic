@@ -1,0 +1,12 @@
+Header header
+float32 voltage
+float64 orientation
+float64 velocity
+int32 motor_status
+float64[] sonar_status
+float64[] arm_torque
+int32 arm_status
+int32 cam360_status
+int32 second_cam_status
+int32 map_status
+int32 ptz_camera

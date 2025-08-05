@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="pioneer_usb" default="ttyUSB0"/>
+  <!-- <arg name="map" default="$(find obstacle_avoidance)/maps/anexo_u.yaml"/>  -->
+  <arg name="autonav" default="false" />
+  <arg name="rviz" default="false" />
+  <arg name="cam" default="true" />
+  <arg name="logitech" default="false"/>
+  <arg name="wiimote" default="false"/>
+  <arg name="ar_cad_model" default="true"/>
+  <arg name="video_device" default="/dev/video3"/>
+  
+  <!-- For simulation -->
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="false" />
+  <arg name="headless" default="false" />
+  <!-- <arg name="world_name" default="$(find obstacle_avoidance)/worlds/jackal_race.world" /> -->
+  <!-- <arg name="map" default="$(find obstacle_avoidance)/maps/jackal_race.yaml"/> -->
+  <!-- <arg name="map" default="$(find autonav)/maps/anexo_u.yaml"/> -->
+ 
+  <!-- Launch Gazebo with the specified world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="false" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="use_sim_time" value="$(arg use_sim_time)" />
+    <arg name="headless" value="$(arg headless)" />
+    <!-- <arg name="world_name" value="$(arg world_name)" />    -->
+  </include>
+
+  <!-- Launch gazebo -->
+  <!-- <node name="gazebo" pkg="gazebo_ros" type="gzserver" respawn="false" output="screen" args="worlds/empty.world" />
+  <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/> -->
+
+  <!-- spawn Pionner-->
+  <node name="pioneer_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -param robot_description -model pioneer3at"/>
+  
+  <!-- Launch obstacle avoidance -->
+  <group if="$(arg autonav)">
+    <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch">
+      <arg name="map" default="$(arg map)"/>
+      <arg name="rviz" default="$(arg rviz)"/>
+    </include>
+    
+    <node pkg="joy" type="joy_node" name="joy_node" respawn="true">
+      <param name="dev" type="string" value="/dev/input/js0"/>
+    </node>
+    
+    <param name="axis_vx" type="int" value="1" />
+    <node pkg="p2os_teleop" type="p2os_teleop" name="p2os_teleop" >
+      <remap from="cmd_vel" to="raw_cmd_vel"/>
+    </node>
+  </group>
+
+</launch>

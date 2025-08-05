@@ -1,0 +1,16 @@
+<launch>
+
+      <remap from="map" to="/rtabmap/grid_map"/>
+
+      <include file="$(find launch_package)/launch/teleop.launch" />
+
+      <include file="$(find launch_package)/launch/create_rgbd_map.launch" >
+            <arg name="localization" value="true"/>
+      </include>
+
+      <include file="$(find launch_package)/launch/navigation.launch" />
+
+      <node pkg="rviz" type="rviz" name="rviz" args="-d $(find launch_package)/params/slam_rgbd_rviz.rviz" />
+
+</launch>
+

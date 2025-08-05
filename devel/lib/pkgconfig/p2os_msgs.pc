@@ -1,0 +1,8 @@
+prefix=/home/caio/kioneer_ws/devel
+
+Name: p2os_msgs
+Description: Description of p2os_msgs
+Version: 2.1.1
+Cflags: -I/home/caio/kioneer_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime std_msgs

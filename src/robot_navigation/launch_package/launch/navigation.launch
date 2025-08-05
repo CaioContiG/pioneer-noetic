@@ -1,0 +1,26 @@
+<launch>
+
+        <!--- Run the move base -->
+        <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+                <rosparam file="$(find launch_package)/params/costmap_common_params.yaml" command="load" ns="global_costmap" />
+                <rosparam file="$(find launch_package)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+                <rosparam file="$(find launch_package)/params/local_costmap_params.yaml" command="load" />
+                <rosparam file="$(find launch_package)/params/global_costmap_params.yaml" command="load" />
+                <rosparam file="$(find launch_package)/params/base_local_planner_params.yaml" command="load" />
+                <!--- <rosparam file="$(find launch_package)/params/global_planner_params.yaml" command="load" /> -->
+                <rosparam file="$(find launch_package)/params/dwa_local_planner_params.yaml" command="load" />
+                <param name="recovery_behavior_enabled" type="bool" value="false" />
+                <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
+                <!--- <param name="base_local_planner" type="string"  value="base_local_planner/TrajectoryPlannerROS" /> -->
+                <param name="base_local_planner" type="string"  value="dwa_local_planner/DWAPlannerROS" />
+                <param name="conservative_reset_dist" type="double" value="3.0" />
+                <param name="recovery_behavior_enabled" type="bool" value="true" />
+                <param name="clearing_rotation_allowed" type="bool" value="false" />
+                <param name="controller_frequency" type="double" value="10.0" />
+                <param name="planner_frequency"    type="double" value="1.0" />
+                <param name="oscillation_timeout"  type="double" value="0.0" />
+
+                <remap from="cmd_vel" to="cmd_vel"/>
+        </node>
+</launch>
+

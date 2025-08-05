@@ -1,0 +1,8 @@
+prefix=/home/caio/kioneer_ws/devel
+
+Name: pioneer_3at
+Description: Description of pioneer_3at
+Version: 0.1.1
+Cflags: -I/home/caio/kioneer_ws/src/pioneer_3at/include
+Libs: -L${prefix}/lib 
+Requires: cv_bridge image_transport roscpp rospy std_msgs sensor_msgs geometry_msgs

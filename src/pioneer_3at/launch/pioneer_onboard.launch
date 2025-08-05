@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="pioneer_usb" default="ttyUSB0"/>
+  <arg name="autonav" default="false" />
+  <arg name="map"/> 
+  <arg name="rviz" default="false" />
+  <arg name="obs_avoid" default="false"/>
+  <arg name="cam" default="false" />
+  <arg name="video_device" default="/dev/video2"/>
+  <arg name="logitech" default="false"/>
+  <arg name="wiimote" default="false"/>
+  <arg name="webrtc_control" default="false"/>
+  <arg name="ar_cad_model" default="false"/>
+  <arg name="imu_device" default="/dev/ttyUSB1"/>
+  <arg name="imu" default="false"/>
+
+  <!-- Launch obstacle avoidance -->
+  <group if="$(arg autonav)">
+    <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch">
+      <arg name="map" default="$(arg map)"/>
+      <arg name="rviz" default="$(arg rviz)"/>
+    </include>
+  </group>
+  
+  <!-- Enable webrtc_control -->
+  <group if="$(arg webrtc_control)">
+    <!-- <node pkg="p2os_teleop" type="p2os_teleop" name="p2os_teleop"/> -->
+    <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_node">
+      <remap from="cmd_vel" to="net_cmd_vel"/>
+    </node>
+  </group>
+
+  <!-- Load pioneer driver -->
+  <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver" >
+    <param name="port" value="/dev/$(arg pioneer_usb)"/>
+  </node>
+  
+  <!-- Enable motors -->
+  <node name="rostopic" pkg="rostopic" type="rostopic" args="pub -1 /cmd_motor_state p2os_msgs/MotorState 1"/>
+  
+  <!-- Enable camera -->
+  <group if="$(arg cam)">
+    <node pkg="usb_cam" type="usb_cam_node" name="usb_cam" output="screen">
+      <param name="video_device" value="$(arg video_device)" />
+      <param name="pixel_format" value="yuyv" />
+    </node>
+  </group>
+
+  <!-- Enable IMU usage -->
+  <group if="$(arg imu)">
+    <node pkg="microstrain_3dmgx2_imu" type="imu_node" name="imu_node" respawn="true">
+      <param name="port" type="string" value="$(arg imu_device)" />
+    </node>
+  </group>
+
+  <!-- Enable Augmented Reality to plot the CAD models. -->
+  <group if="$(arg ar_cad_model)">
+    <node pkg="ar_qr_code" type="ar_qr_code_node" name="AR_CAD_model" respawn="true">
+      <param name="calib_file" value="/mnt/multiview/camera_calib_files/camera_calib_r200rgb#1.yml"/>
+      <param name="mesh_dir" value="/mnt/multiview/modelos_CAD/"/>
+    </node>
+  </group>
+
+  <!-- Joystick Logitech -->
+  <group if="$(arg logitech)">
+    <param name="axis_vx" type="int" value="1" />
+    <node pkg="p2os_teleop" type="p2os_teleop" name="p2os_teleop" >
+      <remap if="$(arg obs_avoid)" from="cmd_vel" to="net_cmd_vel"/>
+    </node>
+    <node pkg="joy" type="joy_node" name="joy_node" respawn="true">
+      <param name="dev" type="string" value="/dev/input/js1"/>
+    </node>
+  </group>
+
+  <!-- Joystick WiiMote -->
+  <group if="$(arg wiimote)">
+    <node pkg="pioneer_3at" type="wii_control" name="wii_control" output="screen">
+      <remap if="$(arg obs_avoid)" from="cmd_vel_wii" to="net_cmd_vel"/>
+      <remap unless="$(arg obs_avoid)" from="cmd_vel_wii" to="cmd_vel"/>
+    </node>
+  </group>
+
+    <!-- Obstacle Avoidance Laser -->
+  <group if="$(arg obs_avoid)">
+    <!--include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch" -->
+    <!--include file="$(find obstacle_avoidance)/launch/include/cloud_to_laser.launch"-->
+    <!--node pkg="obstacle_avoidance" type="obstacle_avoidance_laser" name="obs_avoid_laser" respawn="true" output="screen"-->
+  </group>
+
+  <!-- include file="$(find diagnostics)/launch/diagnostics.launch"/-->
+
+</launch>

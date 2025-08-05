@@ -1,0 +1,12 @@
+<launch>
+    <!-- Robot Driver -->
+    <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver" output="screen">
+        <param name="port" value="/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0" />
+    </node>
+    
+    <!-- Robot Controller -->
+    <node name="robot_teleop" pkg="robot_teleop" type="robot_teleop.py" output="screen"/>
+
+    <!-- Enable Motors -->
+    <node name="rostopic" pkg="rostopic" type="rostopic" args="pub -1 /cmd_motor_state p2os_msgs/MotorState 1"/>
+</launch>

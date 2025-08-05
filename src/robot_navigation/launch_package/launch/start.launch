@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="pioneer_usb" default="ttyUSB0"/>
+
+  <node name="rosaria" pkg="rosaria" type="RosAria" output="screen">
+    <param name="odom_frame" type="string" value="odom"/>
+    <param name="base_link_frame" type="string" value="base_link"/>
+  </node>
+
+  <!-- ARG NAMES -->
+  <arg name="use_rep_117" default="true" />
+  <arg name="min_ang" default="-1.570796" />
+  <arg name="max_ang" default="1.570796" />
+  <arg name="intensity" default="false" />
+  <arg name="cluster" default="1" />
+  <arg name="skip" default="0" />
+  <arg name="port" default="/dev/serial/by-id/usb-Hokuyo_Data_Flex_for_USB_URG-Series_USB_Driver-if00" />
+  <arg name="calibrate_time" default="false" />
+  <arg name="frame_id" default="base_link" />
+  <arg name="time_offset" default="0.0" />
+  <arg name="allow_unsafe_settings" default="false" />
+
+  
+
+  <node name="tf_to_pose" pkg="tf_to_pose" type="tf_to_pose.py" output="screen"></node>
+
+</launch>

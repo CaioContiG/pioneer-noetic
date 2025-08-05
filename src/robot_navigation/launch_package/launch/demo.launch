@@ -1,0 +1,22 @@
+<launch>
+      <!-- camera infravermelho -->
+      <include file="$(find realsense2_camera)/launch/rs_rgbd.launch" />
+      
+      <!-- camera 360 -->
+      <include file="$(find spherical_camera)/launch/ricoh_capture.launch" />
+
+      <!-- pionner e hokuyo -->
+      <include file="$(find robot_teleop)/launch/setup_robot.launch" />
+
+      <!-- robot info-->
+      <node name="robot_info" pkg="robot_info" type="info.py" output="screen"/>
+
+      <!-- arm -->
+      <include file="$(find arm_controller)/launch/arm_driver.launch" />
+      <include file="$(find arm_controller)/launch/arm_controller.launch" />
+
+       <!-- ros_webrtc -->
+      <!--include file="$(find ros_webrtc)/launch/ros_webrtc_signaling.launch" /-->
+      <include file="$(find ros_webrtc)/launch/ros_webrtc.launch" />
+
+</launch>
